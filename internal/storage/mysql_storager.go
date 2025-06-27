@@ -7,7 +7,7 @@ import (
 	"log"
 	"log-processor/internal/model"
 
-	_ "github.com/go-sql-driver/mysql" // Importa o driver sem usá-lo diretamente
+	_ "github.com/go-sql-driver/mysql" // Importa o driver MySQL
 )
 
 // MySQLStorager armazena logs no MySQL.
