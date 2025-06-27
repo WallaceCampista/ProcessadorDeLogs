@@ -89,8 +89,6 @@ func (s *MySQLStorager) SearchLogs(ctx context.Context, source, severity string)
 	// Itera sobre as linhas do resultado e escaneia cada uma para a struct LogEntry.
 	for rows.Next() {
 		var logEntry model.LogEntry
-
-		// NOVO: Use variáveis intermediárias para escanear os campos de data e hora.
 		var timestampStr, processedAtStr []uint8
 
 		if err := rows.Scan(
@@ -98,22 +96,28 @@ func (s *MySQLStorager) SearchLogs(ctx context.Context, source, severity string)
 			&logEntry.Message,
 			&logEntry.Severity,
 			&logEntry.Source,
-			&timestampStr,   // Escaneia para a variável intermediária
-			&processedAtStr, // Escaneia para a variável intermediária
+			&timestampStr,
+			&processedAtStr,
 		); err != nil {
 			return nil, fmt.Errorf("failed to scan log row: %w", err)
 		}
 
 		// NOVO: Converte as strings para time.Time
 		// O formato de layout deve corresponder ao formato de data/hora do MySQL.
-		layout := "2006-01-02 15:04:05" // Formato padrão do DATETIME do MySQL
+		layout := "2006-01-02 15:04:05"
 
-		logEntry.Timestamp, err = time.Parse(layout, string(timestampStr))
+		// Pega a localização do sistema.
+		loc, err := time.LoadLocation("Local")
+		if err != nil {
+			return nil, fmt.Errorf("failed to load local timezone: %w", err)
+		}
+
+		logEntry.Timestamp, err = time.ParseInLocation(layout, string(timestampStr), loc)
 		if err != nil {
 			return nil, fmt.Errorf("failed to parse timestamp: %w", err)
 		}
 
-		logEntry.ProcessedAt, err = time.Parse(layout, string(processedAtStr))
+		logEntry.ProcessedAt, err = time.ParseInLocation(layout, string(processedAtStr), loc)
 		if err != nil {
 			return nil, fmt.Errorf("failed to parse processed_at: %w", err)
 		}

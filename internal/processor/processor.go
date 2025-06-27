@@ -59,13 +59,14 @@ func (p *LogProcessor) processLog(rawLog model.RawLogEntry) {
 		timestamp = time.Now()
 	}
 
+	// Crie o log enriquecido.
 	processedLog := model.LogEntry{
 		ID:          id,
 		Message:     rawLog.Message,
 		Severity:    severity,
 		Source:      source,
 		Timestamp:   timestamp,
-		ProcessedAt: time.Now(),
+		ProcessedAt: time.Now().In(time.Local),
 	}
 
 	// Envie o log processado para o canal de saída.

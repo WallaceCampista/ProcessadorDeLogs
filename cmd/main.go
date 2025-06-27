@@ -24,17 +24,14 @@ func main() {
 	}
 
 	// 2. Crie a camada de armazenamento (MySQL Storager).
-	// Esta variável (mysqlStorager) precisa ser criada antes de ser usada.
-	mysqlStorager, err := storage.NewMySQLStorager(
-		fmt.Sprintf(
-			"%s:%s@tcp(%s:%d)/%s",
-			cfg.Database.User,
-			cfg.Database.Password,
-			cfg.Database.Host,
-			cfg.Database.Port,
-			cfg.Database.Name,
-		),
+	mysqlDSN := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?loc=Local",
+		cfg.Database.User,
+		cfg.Database.Password,
+		cfg.Database.Host,
+		cfg.Database.Port,
+		cfg.Database.Name,
 	)
+	mysqlStorager, err := storage.NewMySQLStorager(mysqlDSN)
 	if err != nil {
 		log.Fatalf("Failed to create MySQL storager: %v", err)
 	}
