@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/Análise de Logs.iml" filepath="$PROJECT_DIR$/.idea/Análise de Logs.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/log-processor.iml" filepath="$PROJECT_DIR$/.idea/log-processor.iml" />
     </modules>
   </component>
 </project>
