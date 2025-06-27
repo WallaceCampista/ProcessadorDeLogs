@@ -16,19 +16,19 @@ O objetivo é processar logs recebidos via RabbitMQ e armazená-los em um banco 
 ### Crie o banco `logs_db` no MySQL
 
 ```bash
-CREATE DATABASE IF NOT EXISTS logs_db;
+CREATE DATABASE IF NOT EXISTS log_db;
 ```
 
 ### Crie a tabela `logs` no banco de dados MySQL
 
 ````bash
-CREATE TABLE IF NOT EXISTS logs (
-id VARCHAR(255) PRIMARY KEY,
-message TEXT,
-severity VARCHAR(50),
-source VARCHAR(255),
-timestamp DATETIME,
-processed_at DATETIME
+CREATE TABLE IF NOT EXISTS log_db.logs (
+  id VARCHAR(255) PRIMARY KEY,
+  message TEXT,
+  severity VARCHAR(50),
+  source VARCHAR(255),
+  timestamp DATETIME,
+  processed_at DATETIME
 );
 ````
 

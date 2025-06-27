@@ -17,27 +17,35 @@ import (
 )
 
 func main() {
-	// 1. Carregue as configurações.
+	// 1. Carregue as configurações do arquivo YAML.
 	cfg, err := config.LoadConfig()
 	if err != nil {
 		log.Fatalf("Failed to load config: %v", err)
 	}
 
-	// 2. Crie a camada de armazenamento (agora MySQL Storager).
-	// DSN (Data Source Name) para um banco de dados MySQL local.
-	// Altere 'root_password' e 'log_db' se você usa credenciais diferentes.
-	mysqlDSN := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", "user_go", "user1234.", "127.0.0.1", "3306", "log_db")
-	mysqlStorager, err := storage.NewMySQLStorager(mysqlDSN)
+	// 2. Crie a camada de armazenamento (MySQL Storager).
+	// Esta variável (mysqlStorager) precisa ser criada antes de ser usada.
+	mysqlStorager, err := storage.NewMySQLStorager(
+		fmt.Sprintf(
+			"%s:%s@tcp(%s:%d)/%s",
+			cfg.Database.User,
+			cfg.Database.Password,
+			cfg.Database.Host,
+			cfg.Database.Port,
+			cfg.Database.Name,
+		),
+	)
 	if err != nil {
 		log.Fatalf("Failed to create MySQL storager: %v", err)
 	}
 
 	// 3. Crie e inicie o processador de logs.
+	// Esta variável (logProcessor) precisa ser criada antes de ser usada.
 	bufferSize := 1000
 	logProcessor := processor.NewLogProcessor(bufferSize)
 	logProcessor.Start()
 
-	// 4. Crie uma goroutine para consumir os logs...
+	// 4. Crie uma goroutine para consumir os logs processados e enviá-los ao MySQL.
 	go func() {
 		ctx := context.Background()
 		for processedLog := range logProcessor.Output {
@@ -51,25 +59,24 @@ func main() {
 	}()
 
 	// 5. Configure o servidor Gin e os handlers.
+	// Agora as variáveis logProcessor e mysqlStorager já foram declaradas.
 	router := gin.Default()
-	logHandler := handler.NewLogHandler(logProcessor)
 
-	// NOVO: Crie uma instância do handler de busca.
+	logHandler := handler.NewLogHandler(logProcessor)
 	searchHandler := handler.NewSearchHandler(mysqlStorager)
 
 	// Defina as rotas.
 	router.POST("/logs", logHandler.IngestLog)
-	router.GET("/health", func(c *gin.Context) {
+	router.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{"status": "ok", "uptime": time.Since(time.Now()).Round(time.Second).String()})
 	})
-
-	// NOVO: Adicione a rota de busca.
 	router.GET("/search", searchHandler.SearchLogs)
 
 	// 6. Inicie o servidor em uma goroutine para lidar com o desligamento.
 	go func() {
-		log.Printf("Starting server on port %s...", cfg.ServerPort)
-		if err := router.Run(":" + cfg.ServerPort); err != nil {
+		// Acessa a porta da configuração aninhada.
+		log.Printf("Starting server on port %d...", cfg.Server.Port)
+		if err := router.Run(fmt.Sprintf(":%d", cfg.Server.Port)); err != nil {
 			log.Fatalf("Failed to run server: %v", err)
 		}
 	}()

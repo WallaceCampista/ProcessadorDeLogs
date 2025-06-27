@@ -1,0 +1,11 @@
+server:
+  port: 8080
+
+database:
+  host: 127.0.0.1
+  port: 3306
+  user: COOASD_DEV
+  password: Cooasd.DEV123
+#  user: user_go
+#  password: user1234.
+  name: log_db
