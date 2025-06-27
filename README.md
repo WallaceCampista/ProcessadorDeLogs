@@ -3,9 +3,13 @@
 Este é um projeto de processamento de logs que utiliza Go, MySQL e RabbitMQ.
 O objetivo é processar logs recebidos via RabbitMQ e armazená-los em um banco de dados MySQL.
 
+<br>
+
 ## Sumário
 
 - [Configuração do Ambiente para o Projeto de Logs](#configuração-do-ambiente-para-o-projeto-de-logs)
+
+<br>
 
 ## Configuração do Ambiente para o Projeto de Logs
 
@@ -34,3 +38,10 @@ processed_at DATETIME
 
 ### Certifique-se de que o MySQL está disponível em `localhost` ou `127.0.0.1` e rodando na porta `3306`.
 - Essas configurações estão padronizadas, mas você pode ajustá-las conforme necessário no arquivo `main.go`
+
+<br>
+
+## Licença
+Este projeto está licenciado sob a Licença MIT - veja o arquivo [LICENSE](LICENSE) para mais detalhes.
+
+### Desenvolvido com 💖
