@@ -37,7 +37,7 @@ func main() {
 	logProcessor := processor.NewLogProcessor(bufferSize)
 	logProcessor.Start()
 
-	// 4. Crie uma goroutine para consumir os logs processados e enviá-los ao MySQL.
+	// 4. Crie uma goroutine para consumir os logs...
 	go func() {
 		ctx := context.Background()
 		for processedLog := range logProcessor.Output {
@@ -50,13 +50,21 @@ func main() {
 		}
 	}()
 
-	// 5. Configure o servidor Gin e o handler.
+	// 5. Configure o servidor Gin e os handlers.
 	router := gin.Default()
 	logHandler := handler.NewLogHandler(logProcessor)
+
+	// NOVO: Crie uma instância do handler de busca.
+	searchHandler := handler.NewSearchHandler(mysqlStorager)
+
+	// Defina as rotas.
 	router.POST("/logs", logHandler.IngestLog)
 	router.GET("/health", func(c *gin.Context) {
 		c.JSON(200, gin.H{"status": "ok", "uptime": time.Since(time.Now()).Round(time.Second).String()})
 	})
+
+	// NOVO: Adicione a rota de busca.
+	router.GET("/search", searchHandler.SearchLogs)
 
 	// 6. Inicie o servidor em uma goroutine para lidar com o desligamento.
 	go func() {
