@@ -41,28 +41,24 @@ func (p *LogProcessor) Start() {
 
 // processLog executa a lógica de enriquecimento em um log.
 func (p *LogProcessor) processLog(rawLog model.RawLogEntry) {
-	// Gerar um ID único para o log.
-	id := uuid.New().String()
+	// LINHA DE DEBUG ANTERIOR
+	log.Printf("DEBUG: Processing log message: '%s' from source '%s'", rawLog.Message, rawLog.Source)
 
-	// Se a severidade não foi fornecida, defina como "INFO" por padrão.
+	// ... (código de enriquecimento, sem mudanças) ...
+	id := uuid.New().String()
 	severity := rawLog.Severity
 	if severity == "" {
 		severity = "INFO"
 	}
-
-	// Se a fonte não foi fornecida, defina como "unknown".
 	source := rawLog.Source
 	if source == "" {
 		source = "unknown"
 	}
-
-	// Se o timestamp não foi fornecido, use o tempo atual.
 	timestamp := rawLog.Timestamp
 	if timestamp.IsZero() {
 		timestamp = time.Now()
 	}
 
-	// Crie o log enriquecido.
 	processedLog := model.LogEntry{
 		ID:          id,
 		Message:     rawLog.Message,
@@ -72,11 +68,11 @@ func (p *LogProcessor) processLog(rawLog model.RawLogEntry) {
 		ProcessedAt: time.Now(),
 	}
 
-	// Simule um processamento.
-	// log.Printf("Processing log ID %s from source %s...\n", processedLog.ID, processedLog.Source)
-
 	// Envie o log processado para o canal de saída.
 	p.Output <- processedLog
+
+	// NOVA LINHA DE DEBUG: Adicione esta linha para confirmar que o envio para o canal de saída não travou.
+	log.Printf("DEBUG: Log ID %s sent to output channel.", processedLog.ID)
 }
 
 // Close fecha os canais de entrada e saída.
