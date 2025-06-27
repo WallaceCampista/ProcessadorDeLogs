@@ -26,7 +26,7 @@ func (h *SearchHandler) SearchLogs(c *gin.Context) {
 	source := c.Query("source")
 	severity := c.Query("severity")
 
-	// Chama o método de busca da camada de armazenamento.
+	// Chama a função de busca da camada de armazenamento.
 	logs, err := h.MySQLStorager.SearchLogs(c.Request.Context(), source, severity)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to retrieve logs", "details": err.Error()})

@@ -3,50 +3,135 @@
     <words>
       <w>acessa</w>
       <w>adiciona</w>
+      <w>adicione</w>
       <w>aninhada</w>
       <w>aplicação</w>
+      <w>argumentos</w>
       <w>armazena</w>
       <w>armazenamento</w>
+      <w>armazenar</w>
       <w>arquivo</w>
+      <w>biblioteca</w>
+      <w>bloqueia</w>
+      <w>busca</w>
+      <w>cada</w>
       <w>camada</w>
       <w>caminho</w>
+      <w>canais</w>
       <w>carrega</w>
       <w>carregue</w>
+      <w>chega</w>
+      <w>cliente</w>
+      <w>concorrentemente</w>
       <w>conexão</w>
       <w>configuração</w>
       <w>configurações</w>
+      <w>confirmar</w>
       <w>consumir</w>
+      <w>conteúdo</w>
+      <w>converte</w>
       <w>cooasd</w>
       <w>correção</w>
       <w>criada</w>
       <w>crie</w>
+      <w>critérios</w>
+      <w>crus</w>
+      <w>código</w>
+      <w>dados</w>
       <w>declaradas</w>
       <w>defina</w>
+      <w>dependência</w>
       <w>descomente</w>
       <w>desligamento</w>
+      <w>desta</w>
+      <w>deve</w>
+      <w>dinamicamente</w>
+      <w>disponível</w>
+      <w>encontrados</w>
+      <w>enriquece</w>
+      <w>enriquecido</w>
+      <w>enriquecimento</w>
+      <w>enviar</w>
+      <w>envie</w>
+      <w>envio</w>
       <w>enviá</w>
+      <w>escaneia</w>
       <w>estrutura</w>
+      <w>executa</w>
       <w>extensão</w>
+      <w>fecha</w>
+      <w>filtro</w>
+      <w>filtros</w>
+      <w>fonte</w>
+      <w>forem</w>
+      <w>formato</w>
+      <w>fornecidos</w>
+      <w>função</w>
+      <w>gerado</w>
+      <w>gerar</w>
+      <w>gerencia</w>
+      <w>imediatamente</w>
+      <w>importa</w>
+      <w>importe</w>
       <w>ingestão</w>
+      <w>inicia</w>
       <w>inicializa</w>
       <w>inicie</w>
+      <w>insere</w>
+      <w>inserção</w>
       <w>instância</w>
+      <w>isso</w>
+      <w>itera</w>
+      <w>localização</w>
+      <w>lógica</w>
       <w>mapeia</w>
       <w>mapstructure</w>
+      <w>mudanças</w>
+      <w>método</w>
+      <w>múltiplos</w>
+      <w>nosso</w>
+      <w>nível</w>
+      <w>obter</w>
       <w>onde</w>
+      <w>ordenação</w>
+      <w>pacote</w>
+      <w>parâmetros</w>
+      <w>pelo</w>
+      <w>permite</w>
       <w>precisa</w>
+      <w>precisará</w>
+      <w>primeiro</w>
+      <w>processa</w>
+      <w>processado</w>
       <w>processador</w>
       <w>processados</w>
+      <w>processamento</w>
+      <w>processar</w>
+      <w>processá</w>
       <w>procurar</w>
+      <w>recebe</w>
+      <w>receber</w>
+      <w>recebido</w>
+      <w>recentes</w>
+      <w>referência</w>
+      <w>representa</w>
+      <w>requisição</w>
+      <w>responda</w>
+      <w>resultado</w>
+      <w>retorna</w>
       <w>rodando</w>
       <w>roteador</w>
       <w>saúde</w>
       <w>servidor</w>
       <w>serviço</w>
+      <w>severidade</w>
       <w>seção</w>
       <w>sistema</w>
+      <w>sobre</w>
       <w>storager</w>
+      <w>tabela</w>
       <w>tipo</w>
+      <w>travou</w>
       <w>usada</w>
       <w>valores</w>
       <w>variáveis</w>
@@ -54,6 +139,7 @@
       <w>verificar</w>
       <w>versao</w>
       <w>viria</w>
+      <w>único</w>
     </words>
   </dictionary>
 </component>
