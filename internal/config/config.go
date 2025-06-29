@@ -3,7 +3,6 @@ package config
 import (
 	"fmt"
 	"github.com/spf13/viper"
-	"log" // Adicione este import
 )
 
 // Config armazena as configurações da aplicação.
@@ -40,9 +39,6 @@ func LoadConfig() (*Config, error) {
 	if err := viper.Unmarshal(&cfg); err != nil {
 		return nil, fmt.Errorf("failed to unmarshal config: %w", err)
 	}
-
-	// LINHA DE DEBUG: Adicione esta linha para ver o que foi lido.
-	log.Printf("DEBUG: Configuração de limite de taxa lida: Rate=%d, Period='%s'", cfg.RateLimiting.Rate, cfg.RateLimiting.Period)
 
 	return &cfg, nil
 }

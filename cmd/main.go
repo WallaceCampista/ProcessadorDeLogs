@@ -116,7 +116,6 @@ func main() {
 
 	// 7. Inicie o servidor.
 	go func() {
-		log.Printf("Servidor rodando na porta %d...", cfg.Server.Port)
 		if err := router.Run(fmt.Sprintf(":%d", cfg.Server.Port)); err != nil {
 			log.Fatalf("Falha ao executar o servidor: %v", err)
 		}
