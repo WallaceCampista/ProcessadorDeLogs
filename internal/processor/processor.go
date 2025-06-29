@@ -29,20 +29,20 @@ func NewLogProcessor(bufferSize int) *LogProcessor {
 func (p *LogProcessor) Start() {
 	// Inicia um loop infinito para processar logs do canal de entrada.
 	go func() {
-		log.Println("Log processor started. Waiting for logs...")
+		log.Println("O processador de log começou. Esperando por logs...")
 		for rawLog := range p.Input {
 			// Para cada log recebido no canal, inicie uma goroutine para processá-lo.
 			// Isso permite processar múltiplos logs concorrentemente.
 			go p.processLog(rawLog)
 		}
-		log.Println("Log processor stopped.")
+		log.Println("O processador de log parou.")
 	}()
 }
 
 // processLog executa a lógica de enriquecimento em um log.
 func (p *LogProcessor) processLog(rawLog model.RawLogEntry) {
 	// LINHA DE DEBUG ANTERIOR
-	log.Printf("DEBUG: Processing log message: '%s' from source '%s'", rawLog.Message, rawLog.Source)
+	log.Printf("DEBUG: Mensagem de log de processamento: '%s' da fonte '%s'", rawLog.Message, rawLog.Source)
 
 	// ... (código de enriquecimento, sem mudanças) ...
 	id := uuid.New().String()
@@ -73,7 +73,7 @@ func (p *LogProcessor) processLog(rawLog model.RawLogEntry) {
 	p.Output <- processedLog
 
 	// NOVA LINHA DE DEBUG: Adicione esta linha para confirmar que o envio para o canal de saída não travou.
-	log.Printf("DEBUG: Log ID %s sent to output channel.", processedLog.ID)
+	log.Printf("DEBUG: Log ID %senviado para o canal de saída.", processedLog.ID)
 }
 
 // Close fecha os canais de entrada e saída.

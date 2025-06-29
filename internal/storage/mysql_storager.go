@@ -28,7 +28,7 @@ func NewMySQLStorager(dsn string) (*MySQLStorager, error) {
 		return nil, fmt.Errorf("failed to ping database: %w", err)
 	}
 
-	log.Println("Successfully connected to MySQL database!")
+	log.Println("Conectado com sucesso ao banco de dados MySQL!")
 	return &MySQLStorager{db: db}, nil
 }
 
@@ -48,15 +48,16 @@ func (s *MySQLStorager) StoreLog(ctx context.Context, logEntry model.LogEntry) e
 		logEntry.ProcessedAt,
 	)
 	if err != nil {
-		return fmt.Errorf("failed to insert log into database: %w", err)
+		return fmt.Errorf("falha ao inserir login no banco de dados: %w", err)
 	}
 
-	log.Printf("DEBUG: Successfully stored log ID %s in MySQL.", logEntry.ID)
+	log.Printf("DEBUG:ID de log armazenado com sucesso %s em MySQL.", logEntry.ID)
 	return nil
 }
 
 // SearchLogs busca logs na tabela 'logs' com base em critérios de filtro.
-func (s *MySQLStorager) SearchLogs(ctx context.Context, source, severity string) ([]model.LogEntry, error) {
+// NOVO: Adiciona filtros por 'message', 'startDate' e 'endDate'.
+func (s *MySQLStorager) SearchLogs(ctx context.Context, source, severity, message, startDate, endDate string) ([]model.LogEntry, error) {
 	// A consulta base.
 	query := "SELECT id, message, severity, source, timestamp, processed_at FROM logs WHERE 1=1"
 
@@ -73,8 +74,37 @@ func (s *MySQLStorager) SearchLogs(ctx context.Context, source, severity string)
 		args = append(args, severity)
 	}
 
+	// NOVO: Filtro por palavra-chave na mensagem (busca por substring).
+	if message != "" {
+		query += " AND message LIKE ?"
+		args = append(args, "%"+message+"%") // O '%' permite buscar por substring.
+	}
+
+	// NOVO: Filtro por intervalo de datas.
+	layout := "2006-01-02" // Layout de data esperado (ex: 2025-06-27)
+
+	if startDate != "" {
+		// Converte a string de data para o formato de data/hora.
+		query += " AND timestamp >= ?"
+		args = append(args, startDate) // MySQL pode comparar strings de data diretamente.
+	}
+
+	if endDate != "" {
+		// Adiciona um dia à data final para incluir todo o dia.
+		// Isso é crucial para queries de data.
+		parsedEndDate, err := time.Parse(layout, endDate)
+		if err != nil {
+			return nil, fmt.Errorf("invalid end_date format: %w", err)
+		}
+		endDateExclusive := parsedEndDate.AddDate(0, 0, 1).Format(layout)
+		query += " AND timestamp < ?"
+		args = append(args, endDateExclusive)
+	}
+
 	// Adiciona uma ordenação para obter os logs mais recentes primeiro.
 	query += " ORDER BY processed_at DESC"
+
+	// ... (restante do código permanece o mesmo: QueryContext, Scan, etc.) ...
 
 	// Executa a consulta no banco de dados.
 	rows, err := s.db.QueryContext(ctx, query, args...)
@@ -83,10 +113,7 @@ func (s *MySQLStorager) SearchLogs(ctx context.Context, source, severity string)
 	}
 	defer rows.Close()
 
-	// Um slice para armazenar os logs encontrados.
 	var logs []model.LogEntry
-
-	// Itera sobre as linhas do resultado e escaneia cada uma para a struct LogEntry.
 	for rows.Next() {
 		var logEntry model.LogEntry
 		var timestampStr, processedAtStr []uint8
@@ -102,22 +129,17 @@ func (s *MySQLStorager) SearchLogs(ctx context.Context, source, severity string)
 			return nil, fmt.Errorf("failed to scan log row: %w", err)
 		}
 
-		// NOVO: Converte as strings para time.Time
-		// O formato de layout deve corresponder ao formato de data/hora do MySQL.
-		layout := "2006-01-02 15:04:05"
-
-		// Pega a localização do sistema.
 		loc, err := time.LoadLocation("Local")
 		if err != nil {
 			return nil, fmt.Errorf("failed to load local timezone: %w", err)
 		}
 
-		logEntry.Timestamp, err = time.ParseInLocation(layout, string(timestampStr), loc)
+		logEntry.Timestamp, err = time.ParseInLocation("2006-01-02 15:04:05", string(timestampStr), loc)
 		if err != nil {
 			return nil, fmt.Errorf("failed to parse timestamp: %w", err)
 		}
 
-		logEntry.ProcessedAt, err = time.ParseInLocation(layout, string(processedAtStr), loc)
+		logEntry.ProcessedAt, err = time.ParseInLocation("2006-01-02 15:04:05", string(processedAtStr), loc)
 		if err != nil {
 			return nil, fmt.Errorf("failed to parse processed_at: %w", err)
 		}
@@ -134,6 +156,6 @@ func (s *MySQLStorager) SearchLogs(ctx context.Context, source, severity string)
 
 // Close fecha a conexão com o banco de dados.
 func (s *MySQLStorager) Close() error {
-	log.Println("Closing MySQL database connection...")
+	log.Println("Fechando a conexão do banco de dados MySQL...")
 	return s.db.Close()
 }

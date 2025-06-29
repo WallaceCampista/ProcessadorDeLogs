@@ -4,8 +4,13 @@ server:
 database:
   host: 127.0.0.1
   port: 3306
-  user: COOASD_DEV
-  password: Cooasd.DEV123
-#  user: user_go
-#  password: user1234.
+#  user: COOASD_DEV
+#  password: Cooasd.DEV123
+  user: user_go
+  password: user1234.
   name: log_db
+
+# NOVO: Seção de configuração para o limite de taxa.
+rate_limiting:
+  rate: 5          # Limite de 5 requisições
+  period: "1s"     # Por segundo (ex: "1m" para por minuto)

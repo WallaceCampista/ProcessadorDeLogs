@@ -25,7 +25,7 @@ func NewLogHandler(p *processor.LogProcessor) *LogHandler {
 func (h *LogHandler) IngestLog(c *gin.Context) {
 	var rawLog model.RawLogEntry
 	if err := c.ShouldBindJSON(&rawLog); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid log format", "details": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Formato de log inválido", "detalhe": err.Error()})
 		return
 	}
 
@@ -34,5 +34,5 @@ func (h *LogHandler) IngestLog(c *gin.Context) {
 	h.LogProcessor.Input <- rawLog
 
 	// Responda ao cliente imediatamente.
-	c.JSON(http.StatusOK, gin.H{"message": "Log received and queued for processing"})
+	c.JSON(http.StatusOK, gin.H{"message": "Log recebido e fila para processamento"})
 }
